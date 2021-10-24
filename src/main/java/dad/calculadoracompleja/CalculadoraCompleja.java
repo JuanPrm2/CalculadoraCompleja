@@ -27,7 +27,8 @@ public class CalculadoraCompleja extends Application{
 	numRealResultadoTextField,numImaginarioResultadoTextField;
 	private Label suma1,suma2,suma3,i1,i2,i3,espacioLabel;
 	private Separator separador=new Separator();
-	private Button boton;
+	private ComboBox<String> combo;
+
 	
 	Complejo complejo1,complejo2,complejoResultado;
 	
@@ -63,9 +64,9 @@ public class CalculadoraCompleja extends Application{
 		separador=new Separator();
 		separador.setPrefWidth(120);
 		ObservableList<String> operaciones = FXCollections.observableArrayList();
-		operaciones.addAll("+","-","*","/");
-		ComboBox<String> combo = new ComboBox<>(operaciones);
-		boton=new Button("Ejecutar");
+		combo = new ComboBox<String>();
+		combo.getItems().addAll("+", "-", "*", "/");
+		
 		
 		
 		//primer numero complejo
@@ -101,7 +102,7 @@ public class CalculadoraCompleja extends Application{
 		vboxIzquierda.setSpacing(40);
 		
 		//imagen entera de la escena
-		HBox root=new HBox(vboxIzquierda,vboxCentro,boton);
+		HBox root=new HBox(vboxIzquierda,vboxCentro);
 		root.setSpacing(15);
 		root.setAlignment(Pos.CENTER);
 		
@@ -112,54 +113,47 @@ public class CalculadoraCompleja extends Application{
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		Bindings.bindBidirectional(numReal1TextField.textProperty(), complejo1.numRealProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(numImaginario1TextField.textProperty(), complejo1.numImaginarioProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(numReal2TextField.textProperty(), complejo2.numRealProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(numImaginario2TextField.textProperty(), complejo2.numImaginarioProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(numRealResultadoTextField.textProperty(), complejoResultado.numRealProperty(), new NumberStringConverter());
 		Bindings.bindBidirectional(numImaginarioResultadoTextField.textProperty(), complejoResultado.numImaginarioProperty(), new NumberStringConverter());
-		combo.getSelectionModel().selectFirst();
-		String operacionElegida= combo.getSelectionModel().getSelectedItem().toString();
 		
-
-		boton.setOnAction(e -> Operaciones(operacionElegida));
-		
+		combo.getSelectionModel().selectedItemProperty().addListener((o, ov, nv) -> cambioCombo(nv));
+		combo.getSelectionModel().selectFirst();	
 	}
-
-	private void Operaciones(String operacionElegida) {
-		
-		switch (operacionElegida) {
+	
+	public void cambioCombo(String nv){
+		switch (nv) {
 		case "+":
 			complejoResultado.setComplejo(complejo1.sumaComplejo(complejo2));
+			
 			break;
 		case "-":
 			complejoResultado.setComplejo(complejo1.restaComplejo(complejo2));
+
+			
 			break;
 		case "*":
 			complejoResultado.setComplejo(complejo1.multiplicacionComplejo(complejo2));
+
 			
 			break;
 		case "/":
 			complejoResultado.setComplejo(complejo1.divisionComplejo(complejo2));
-			
+
+	
 			break;
-		}
 		
+		
+	}
+		
+
 	}
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
-
 	
 
 }
